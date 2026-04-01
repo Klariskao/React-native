@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { ScrollView, Text, View, Image, StyleSheet, Pressable } from "react-native";
 
 interface Pokemon {
+  id: string,
   name: string;
   image: string;
   types: PokemonType[];
@@ -56,9 +57,12 @@ export default function Index() {
         data.results.map(async (pokemon: any) => {
           const res = await fetch(pokemon.url);
           const details = await res.json();
+          const image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${details.id}.png`
+
           return {
+            id: details.id,
             name: pokemon.name,
-            image: details.sprites.front_default,
+            image: image,
             types: details.types,
           };
         })
@@ -75,6 +79,8 @@ export default function Index() {
       contentContainerStyle={{
         gap: 16,
         padding: 16,
+        flexDirection: "row",
+        flexWrap: "wrap",
       }}
     >
       {pokemons.map((pokemon) => (
@@ -85,26 +91,26 @@ export default function Index() {
             params: { name: pokemon.name }
           }}
           style={{
+            width: "46%",
             // @ts-ignore
             backgroundColor: colorsByType[pokemon.types[0].type.name] + 50,
             padding: 20,
             borderRadius: 20,
           }}
         >
-          <View>
+          <View
+            style={{
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              source={{ uri: pokemon.image }}
+              style={{ width: 100, height: 100 }}
+            />
             <Text style={styles.name}>{pokemon.name}</Text>
-            <Text style={styles.type}>{pokemon.types[0].type.name}</Text>
-
-            <View
-              style={{
-                flexDirection: "row"
-              }}
-            >
-              <Image
-                source={{ uri: pokemon.image }}
-                style={{ width: 150, height: 150 }}
-              />
-            </View>
+            <Text style={styles.id}>{String(pokemon.id).padStart(3, "0")}</Text>
           </View>
         </Link>
       ))}
@@ -114,13 +120,13 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   name: {
-    fontSize: 28,
+    fontSize: 20,
+    color: '#292663',
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  type: {
+  id: {
     fontSize: 20,
-    fontWeight: 'bold',
     color: 'gray',
     textAlign: 'center',
   }
