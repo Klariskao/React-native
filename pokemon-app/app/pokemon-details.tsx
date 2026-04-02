@@ -2,6 +2,7 @@ import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import '../src/utils/extensions';
+import PokemonCardContainer from "../src/components/pokemon-card-container";
 
 interface PokemonType {
     type: {
@@ -65,6 +66,7 @@ export default function PokemonDetails() {
 
     // Format ID like 00001
     const formattedId = String(pokemon.id).padStart(5, "0");
+    const primaryType = pokemon.types[0].type.name;
 
     return (
         <ScrollView contentContainerStyle={{ padding: 16, gap: 16 }}>
@@ -74,12 +76,31 @@ export default function PokemonDetails() {
                 <Text style={styles.id}>{formattedId}</Text>
             </View>
 
-            {/* Big front image */}
-            <View style={{ alignItems: "center" }}>
+            {/* Big official front image artwork */}
+            <PokemonCardContainer type={primaryType} style={{ padding: 24 }}>
                 <Image
                     source={{ uri: pokemon.sprites.other['official-artwork'].front_default }}
                     style={{ width: 200, height: 200 }}
+                    resizeMode="contain"
                 />
+            </PokemonCardContainer>
+
+            {/* Original sprites */}
+            <View style={{ flexDirection: "row", justifyContent: "center", gap: 16 }}>
+                <PokemonCardContainer type={primaryType} style={{ padding: 12 }}>
+                    <Image
+                        source={{ uri: pokemon.sprites.front_default }}
+                        style={{ width: 80, height: 80 }}
+                        resizeMode="contain"
+                    />
+                </PokemonCardContainer>
+                <PokemonCardContainer type={primaryType} style={{ padding: 12 }}>
+                    <Image
+                        source={{ uri: pokemon.sprites.back_default }}
+                        style={{ width: 80, height: 80 }}
+                        resizeMode="contain"
+                    />
+                </PokemonCardContainer>
             </View>
 
             {/* Tabs */}
@@ -99,18 +120,6 @@ export default function PokemonDetails() {
                         ]}>{tab}</Text>
                     </TouchableOpacity>
                 ))}
-            </View>
-
-            {/* Original sprites */}
-            <View style={{ flexDirection: "row", justifyContent: "space-around", marginVertical: 16 }}>
-                <Image
-                    source={{ uri: pokemon.sprites.front_default }}
-                    style={{ width: 100, height: 100 }}
-                />
-                <Image
-                    source={{ uri: pokemon.sprites.back_default }}
-                    style={{ width: 100, height: 100 }}
-                />
             </View>
 
             {/* Tab content */}
