@@ -5,14 +5,15 @@ export default function RootLayout() {
     <Stack.Screen
       name="index"
       options={{
-        title: "Home"
+        headerTransparent: true,
+        title: "",
       }}
     />
     <Stack.Screen
       name="pokemon-details"
       options={{
         title: "Pokemon Details",
-        headerBackButtonDisplayMode: "minimal"
+        headerBackButtonDisplayMode: "minimal",
       }}
     />
   </Stack>;

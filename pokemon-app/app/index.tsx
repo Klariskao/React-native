@@ -1,6 +1,7 @@
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
-import { ScrollView, Text, View, Image, StyleSheet, Pressable } from "react-native";
+import { FlatList, Text, View, Image, StyleSheet, TextInput } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Pokemon {
   id: string,
@@ -39,6 +40,7 @@ const colorsByType = {
 
 export default function Index() {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     // Fetch pokemons
@@ -48,7 +50,7 @@ export default function Index() {
   async function fetchPokemons() {
     try {
       const response = await fetch(
-        "https://pokeapi.co/api/v2/pokemon/?limit=20"
+        "https://pokeapi.co/api/v2/pokemon/?limit=1350"
       );
       const data = await response.json();
 
@@ -74,60 +76,113 @@ export default function Index() {
     }
   }
 
+  const filteredPokemons = pokemons.filter((pokemon) => {
+    const query = search.toLowerCase();
+
+    return (
+      pokemon.name.toLowerCase().includes(query) ||
+      String(pokemon.id).includes(query)
+    );
+  });
+
   return (
-    <ScrollView
-      contentContainerStyle={{
-        gap: 16,
-        padding: 16,
-        flexDirection: "row",
-        flexWrap: "wrap",
-      }}
-    >
-      {pokemons.map((pokemon) => (
-        <Link
-          key={pokemon.name}
-          href={{
-            pathname: "/pokemon-details",
-            params: { name: pokemon.name }
-          }}
-          style={{
-            width: "46%",
-            // @ts-ignore
-            backgroundColor: colorsByType[pokemon.types[0].type.name] + 50,
-            padding: 20,
-            borderRadius: 20,
-          }}
-        >
-          <View
+    <View style={{ flex: 1 }}>
+      <View style={{ padding: 16 }}>
+        <Text style={styles.header}>
+          Search for a Pokémon by name or using its National Pokédex number.
+        </Text>
+      </View>
+
+      <View style={styles.searchContainer}>
+        <Ionicons name="search" size={20} color="gray" />
+
+        <TextInput
+          placeholder="Search by name or number..."
+          value={search}
+          onChangeText={setSearch}
+          style={styles.searchInput}
+        />
+      </View>
+      <FlatList
+        data={filteredPokemons}
+        keyExtractor={(item) => item.name}
+        numColumns={2}
+        contentContainerStyle={{
+          padding: 16,
+          gap: 16,
+        }}
+        columnWrapperStyle={{
+          justifyContent: "space-between",
+          gap: 16,
+        }}
+        renderItem={({ item: pokemon }) => (
+          <Link
+            href={{
+              pathname: "/pokemon-details",
+              params: { name: pokemon.name }
+            }}
             style={{
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "center",
+              flex: 1,
+              // @ts-ignore
+              backgroundColor: colorsByType[pokemon.types[0].type.name] + 50,
+              padding: 20,
+              borderRadius: 20,
             }}
           >
-            <Image
-              source={{ uri: pokemon.image }}
-              style={{ width: 100, height: 100 }}
-            />
-            <Text style={styles.name}>{pokemon.name}</Text>
-            <Text style={styles.id}>{String(pokemon.id).padStart(3, "0")}</Text>
-          </View>
-        </Link>
-      ))}
-    </ScrollView>
+            <View
+              style={{
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Image
+                source={{ uri: pokemon.image }}
+                style={{ width: 100, height: 100 }}
+              />
+              <Text style={styles.name}>{pokemon.name}</Text>
+              <Text style={styles.id}>
+                {String(pokemon.id).padStart(5, "0")}
+              </Text>
+            </View>
+          </Link>
+        )}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  header: {
+    fontSize: 16,
+    marginBottom: 12,
+    marginTop: 24,
+    color: "#333",
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#d1d1d1",
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    marginHorizontal: 16,
+    marginBottom: 16,
+  },
+  searchInput: {
+    flex: 1,
+    paddingVertical: 10,
+    paddingLeft: 8,
+    fontSize: 16,
+  },
   name: {
     fontSize: 20,
     color: '#292663',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   id: {
     fontSize: 20,
-    color: 'gray',
-    textAlign: 'center',
+    color: "#333",
+    textAlign: "center",
   }
 })
