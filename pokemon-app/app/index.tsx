@@ -1,8 +1,10 @@
 import { Link } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { FlatList, Text, View, Image, StyleSheet, TextInput, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { fetchPokemonList } from "../src/api/pokemon";
 import '../src/utils/extensions';
+import React from "react";
 
 interface Pokemon {
   id: string,
@@ -39,44 +41,63 @@ const colorsByType = {
   fairy: "#D685AD",
 }
 
+const MAX_POKEMONS = 1350;
+
 export default function Index() {
   const [loading, setLoading] = useState(true);
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const [search, setSearch] = useState("");
 
+  const offsetRef = useRef(0);
+
   useEffect(() => {
-    // Fetch pokemons
-    fetchPokemons()
-  }, [])
+    loadInitial();
+  }, []);
 
-  async function fetchPokemons() {
+  async function loadInitial() {
     try {
-      const response = await fetch(
-        "https://pokeapi.co/api/v2/pokemon/?limit=1350"
-      );
-      const data = await response.json();
+      setLoading(true);
+      const data = await fetchPokemonList(0, 50);
+      setPokemons(data);
+      offsetRef.current = 50;
+    } catch (error) {
+      console.log("UI error initial load:", error);
+      // TODO show error state to user
+    } finally {
+      setLoading(false);
+    }
+  }
 
-      setPokemons([]);
+  async function loadMore() {
+    if (loadingMore || !hasMore) return;
 
-      for (const pokemon of data.results) {
-        const res = await fetch(pokemon.url);
-        const details = await res.json();
+    try {
+      setLoadingMore(true);
 
-        const newPokemon = {
-          id: details.id,
-          name: pokemon.name,
-          image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${details.id}.png`,
-          types: details.types,
-        };
+      const nextOffset = offsetRef.current;
 
-        // Add one Pokémon at a time
-        setPokemons((prev) => [...prev, newPokemon]);
+      if (nextOffset >= MAX_POKEMONS) {
+        setHasMore(false);
+        return;
       }
 
-      setLoading(false);
+      console.log("Fetching offset:", nextOffset);
+      const data = await fetchPokemonList(nextOffset, 50);
+
+      setPokemons((prev) => {
+        const existingIds = new Set(prev.map((p) => p.id));
+        const newOnes = data.filter((p) => !existingIds.has(p.id));
+        return [...prev, ...newOnes];
+      });
+      offsetRef.current += 50;
+      if (offsetRef.current >= MAX_POKEMONS) setHasMore(false);
     } catch (error) {
-      console.log(error);
-      setLoading(false);
+      console.log("UI error loading more:", error);
+      // TODO show error state to user
+    } finally {
+      setLoadingMore(false);
     }
   }
 
@@ -126,6 +147,8 @@ export default function Index() {
             justifyContent: "space-between",
             gap: 16,
           }}
+          onEndReached={loadMore}
+          onEndReachedThreshold={1}
           renderItem={({ item: pokemon }) => (
             <Link
               href={{
@@ -159,6 +182,9 @@ export default function Index() {
               </View>
             </Link>
           )}
+          ListFooterComponent={
+            loadingMore ? <ActivityIndicator style={{ margin: 16 }} /> : null
+          }
         />
       )}
     </View>

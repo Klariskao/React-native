@@ -71,7 +71,7 @@ export default function PokemonDetails() {
             {/* Header: Name + ID */}
             <View style={{ alignItems: "center" }}>
                 <Text style={styles.name}>{pokemon.name.capitalizeWords()}</Text>
-                <Text style={styles.id}>#{formattedId}</Text>
+                <Text style={styles.id}>{formattedId}</Text>
             </View>
 
             {/* Big front image */}
