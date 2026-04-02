@@ -2,6 +2,7 @@ import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Text, View, Image, StyleSheet, TextInput, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import '../src/utils/extensions';
 
 interface Pokemon {
   id: string,
@@ -116,6 +117,7 @@ export default function Index() {
           data={filteredPokemons}
           keyExtractor={(item) => item.name}
           numColumns={2}
+          initialNumToRender={4}
           contentContainerStyle={{
             padding: 16,
             gap: 16,
@@ -148,8 +150,9 @@ export default function Index() {
                 <Image
                   source={{ uri: pokemon.image }}
                   style={{ width: 100, height: 100 }}
+                  resizeMode="contain"
                 />
-                <Text style={styles.name}>{pokemon.name}</Text>
+                <Text style={styles.name}>{pokemon.name.capitalizeWords()}</Text>
                 <Text style={styles.id}>
                   {String(pokemon.id).padStart(5, "0")}
                 </Text>
