@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
-import { FlatList, Text, View, Image, StyleSheet, TextInput } from "react-native";
+import { FlatList, Text, View, Image, StyleSheet, TextInput, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 interface Pokemon {
@@ -39,6 +39,7 @@ const colorsByType = {
 }
 
 export default function Index() {
+  const [loading, setLoading] = useState(true);
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
   const [search, setSearch] = useState("");
 
@@ -54,25 +55,27 @@ export default function Index() {
       );
       const data = await response.json();
 
-      // Fetch details about each pokemon in parallel
-      const pokemonDetails = await Promise.all(
-        data.results.map(async (pokemon: any) => {
-          const res = await fetch(pokemon.url);
-          const details = await res.json();
-          const image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${details.id}.png`
+      setPokemons([]);
 
-          return {
-            id: details.id,
-            name: pokemon.name,
-            image: image,
-            types: details.types,
-          };
-        })
-      );
+      for (const pokemon of data.results) {
+        const res = await fetch(pokemon.url);
+        const details = await res.json();
 
-      setPokemons(pokemonDetails);
+        const newPokemon = {
+          id: details.id,
+          name: pokemon.name,
+          image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${details.id}.png`,
+          types: details.types,
+        };
+
+        // Add one Pokémon at a time
+        setPokemons((prev) => [...prev, newPokemon]);
+      }
+
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   }
 
@@ -103,51 +106,58 @@ export default function Index() {
           style={styles.searchInput}
         />
       </View>
-      <FlatList
-        data={filteredPokemons}
-        keyExtractor={(item) => item.name}
-        numColumns={2}
-        contentContainerStyle={{
-          padding: 16,
-          gap: 16,
-        }}
-        columnWrapperStyle={{
-          justifyContent: "space-between",
-          gap: 16,
-        }}
-        renderItem={({ item: pokemon }) => (
-          <Link
-            href={{
-              pathname: "/pokemon-details",
-              params: { name: pokemon.name }
-            }}
-            style={{
-              flex: 1,
-              // @ts-ignore
-              backgroundColor: colorsByType[pokemon.types[0].type.name] + 50,
-              padding: 20,
-              borderRadius: 20,
-            }}
-          >
-            <View
+
+      {loading && pokemons.length === 0 ? (
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <FlatList
+          data={filteredPokemons}
+          keyExtractor={(item) => item.name}
+          numColumns={2}
+          contentContainerStyle={{
+            padding: 16,
+            gap: 16,
+          }}
+          columnWrapperStyle={{
+            justifyContent: "space-between",
+            gap: 16,
+          }}
+          renderItem={({ item: pokemon }) => (
+            <Link
+              href={{
+                pathname: "/pokemon-details",
+                params: { name: pokemon.name }
+              }}
               style={{
-                width: "100%",
-                alignItems: "center",
-                justifyContent: "center",
+                flex: 1,
+                // @ts-ignore
+                backgroundColor: colorsByType[pokemon.types[0].type.name] + 50,
+                padding: 20,
+                borderRadius: 20,
               }}
             >
-              <Image
-                source={{ uri: pokemon.image }}
-                style={{ width: 100, height: 100 }}
-              />
-              <Text style={styles.name}>{pokemon.name}</Text>
-              <Text style={styles.id}>
-                {String(pokemon.id).padStart(5, "0")}
-              </Text>
-            </View>
-          </Link>
-        )}
-      />
+              <View
+                style={{
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Image
+                  source={{ uri: pokemon.image }}
+                  style={{ width: 100, height: 100 }}
+                />
+                <Text style={styles.name}>{pokemon.name}</Text>
+                <Text style={styles.id}>
+                  {String(pokemon.id).padStart(5, "0")}
+                </Text>
+              </View>
+            </Link>
+          )}
+        />
+      )}
     </View>
   );
 }
