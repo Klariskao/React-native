@@ -4,6 +4,7 @@ import { FlatList, Text, View, Image, StyleSheet, TextInput, ActivityIndicator }
 import { Ionicons } from "@expo/vector-icons";
 import { fetchPokemonList } from "../src/api/pokemon";
 import { colorsByType } from "../src/constants/colors";
+import { typography } from "../src/styles/typography";
 import '../src/utils/extensions';
 import React from "react";
 
@@ -154,8 +155,8 @@ export default function Index() {
                   style={{ width: 100, height: 100 }}
                   resizeMode="contain"
                 />
-                <Text style={styles.name}>{pokemon.name.capitalizeWords()}</Text>
-                <Text style={styles.id}>
+                <Text style={typography.name}>{pokemon.name.capitalizeWords()}</Text>
+                <Text style={typography.id}>
                   {String(pokemon.id).padStart(5, "0")}
                 </Text>
               </View>
@@ -172,7 +173,7 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   header: {
-    fontSize: 16,
+    fontSize: 18,
     marginBottom: 12,
     marginTop: 24,
     color: "#333",
@@ -192,15 +193,4 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     fontSize: 16,
   },
-  name: {
-    fontSize: 20,
-    color: '#292663',
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  id: {
-    fontSize: 20,
-    color: "#333",
-    textAlign: "center",
-  }
 })

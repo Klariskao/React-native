@@ -12,7 +12,8 @@ export default function RootLayout() {
     <Stack.Screen
       name="pokemon-details"
       options={{
-        title: "Pokemon Details",
+        headerTransparent: true,
+        title: "",
         headerBackButtonDisplayMode: "minimal",
       }}
     />

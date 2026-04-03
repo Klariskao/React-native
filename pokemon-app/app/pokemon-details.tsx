@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import '../src/utils/extensions';
 import PokemonCardContainer from "../src/components/pokemon-card-container";
+import { typography } from "@/src/styles/typography";
 
 interface PokemonType {
     type: {
@@ -69,11 +70,11 @@ export default function PokemonDetails() {
     const primaryType = pokemon.types[0].type.name;
 
     return (
-        <ScrollView contentContainerStyle={{ padding: 16, gap: 16 }}>
+        <ScrollView contentContainerStyle={{ padding: 16, paddingTop: 24, gap: 16 }}>
             {/* Header: Name + ID */}
             <View style={{ alignItems: "center" }}>
-                <Text style={styles.name}>{pokemon.name.capitalizeWords()}</Text>
-                <Text style={styles.id}>{formattedId}</Text>
+                <Text style={typography.nameLarge}>{pokemon.name.capitalizeWords()}</Text>
+                <Text style={typography.id}>{formattedId}</Text>
             </View>
 
             {/* Big official front image artwork */}
@@ -173,17 +174,6 @@ export default function PokemonDetails() {
 }
 
 const styles = StyleSheet.create({
-    name: {
-        fontSize: 28,
-        fontWeight: "bold",
-        textAlign: "center",
-        textTransform: "capitalize",
-    },
-    id: {
-        fontSize: 18,
-        color: "gray",
-        marginTop: 4,
-    },
     tabsContainer: {
         flexDirection: "row",
         justifyContent: "space-around",
@@ -195,15 +185,17 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
     },
     tabText: {
-        fontSize: 16,
-        color: "#555",
+        fontSize: 20,
+        color: "#29266380",
+        fontWeight: "bold",
+        textAlign: "center",
     },
     activeTab: {
         borderBottomWidth: 2,
-        borderBottomColor: "#333",
+        borderBottomColor: "#292663",
     },
     activeTabText: {
         fontWeight: "bold",
-        color: "#000",
+        color: "#292663",
     },
 });
