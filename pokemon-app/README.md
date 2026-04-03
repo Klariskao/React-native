@@ -1,50 +1,80 @@
-# Welcome to your Expo app 👋
+# 📱 Pokémon App (React Native)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A simple and clean Pokédex mobile application built with **React Native (Expo)**.  
+Browse Pokémon, search by name, and view detailed stats powered by the **PokéAPI**.
 
-## Get started
+---
 
-1. Install dependencies
+## ✨ Features
 
-   ```bash
-   npm install
-   ```
+- 🔍 Search Pokémon by name
+- 📃 Browse Pokémon list
+- 📊 View detailed Pokémon info (types, stats, abilities)
+- ⚡ Smooth and responsive UI
+- 📱 Works on both iOS and Android via Expo
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 🛠️ Tech Stack
 
-In the output, you'll find options to open the app in a
+- React Native
+- Expo
+- JavaScript / TypeScript
+- Fetch API / Axios
+- PokéAPI (https://pokeapi.co/)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## ⚙️ Installation
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+### 1. Clone the repository
 ```
+git clone https://github.com/Klariskao/React-native.git
+cd React-native/pokemon-app
+```
+### 2. Install dependencies
+```
+npm install
+```
+or
+```
+yarn install
+```
+### 3. Start the app
+```
+npx expo start
+```
+### 2. 4. Run on device
+- Press i → iOS simulator
+- Press a → Android emulator
+- Or scan QR code using Expo Go
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 📸 Screenshots
 
-## Learn more
+| Main Screen | Detail Screen | 
+|---------------|-------------|
+| <img width="1222" height="2498" alt="Screenshot_20260402_181233" src="https://github.com/user-attachments/assets/7b396088-5678-4877-9ef3-394bd833b2fa" /> | <img width="1222" height="2498" alt="Screenshot_20260402_181305" src="https://github.com/user-attachments/assets/9521d4c0-bc32-449c-948b-f89752ca5658" /> |
 
-To learn more about developing your project with Expo, look at the following resources:
+## 🌐 API
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Data is fetched from the public PokéAPI:
 
-## Join the community
+- Pokémon list
+- Pokémon details
+- Stats, types, abilities
 
-Join our community of developers creating universal apps.
+🔗 https://pokeapi.co/
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 🧠 What This Project Shows
+- API integration in React Native
+- Screen navigation
+- Component-based architecture
+- State management basics
+- Building mobile UI with Expo
+
+  
+## 📌 Future Improvements
+- ❤️ Favorites with AsyncStorage
+- 🌙 Dark mode
+- 🧬 Evolution chain view
+- 🔎 Filter by type / ability
