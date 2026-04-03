@@ -71,10 +71,18 @@ Data is fetched from the public PokéAPI:
 - Component-based architecture
 - State management basics
 - Building mobile UI with Expo
-
   
 ## 📌 Future Improvements
 - ❤️ Favorites with AsyncStorage
 - 🌙 Dark mode
 - 🧬 Evolution chain view
 - 🔎 Filter by type / ability
+
+## 🙌 Acknowledgements
+
+- [PokéAPI](https://pokeapi.co/) – for providing the Pokémon data
+- React Native community – for tools and resources
+- [Expo](https://expo.dev/) – for simplifying development
+- Inspired by this tutorial:  
+  ▶ https://www.youtube.com/watch?v=BUXnASp_WyQ  
+  by [betomoedano](https://github.com/betomoedano)
