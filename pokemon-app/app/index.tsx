@@ -3,6 +3,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { FlatList, Text, View, Image, StyleSheet, TextInput, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { fetchPokemonList } from "../src/api/pokemon";
+import { colorsByType } from "../src/constants/colors";
 import '../src/utils/extensions';
 import React from "react";
 
@@ -18,27 +19,6 @@ interface PokemonType {
     name: string;
     url: string;
   }
-}
-
-const colorsByType = {
-  normal: "#A8A77A",
-  fire: "#EE8130",
-  water: "#6390F0",
-  electric: "#F7D02C",
-  grass: "#7AC74C",
-  ice: "#96D9D6",
-  fighting: "#C22E28",
-  poison: "#A33EA1",
-  ground: "#E2BF65",
-  flying: "#A98FF3",
-  psychic: "#F95587",
-  bug: "#A6B91A",
-  rock: "#B6A136",
-  ghost: "#735797",
-  dragon: "#6F35FC",
-  dark: "#705746",
-  steel: "#B7B7CE",
-  fairy: "#D685AD",
 }
 
 const MAX_POKEMONS = 1350;
@@ -157,8 +137,7 @@ export default function Index() {
               }}
               style={{
                 flex: 1,
-                // @ts-ignore
-                backgroundColor: colorsByType[pokemon.types[0].type.name] + 50,
+                backgroundColor: (colorsByType[pokemon.types[0].type.name as keyof typeof colorsByType] || "#fff") + "33",
                 padding: 20,
                 borderRadius: 20,
               }}
